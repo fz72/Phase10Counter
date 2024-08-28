@@ -64,17 +64,17 @@ class OpenCVViewModel @Inject constructor() : ViewModel() {
             val cameraProvider = context.getCameraProvider()
             cameraProvider.unbindAll()
 
-            val resStrat = ResolutionStrategy(android.util.Size(1440, 1080), ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER)
+            //val resStrat = ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER)
             val resSelect = ResolutionSelector.Builder()
                 .setAllowedResolutionMode(ResolutionSelector.PREFER_HIGHER_RESOLUTION_OVER_CAPTURE_RATE)
-                .setResolutionStrategy(resStrat)
+                //.setResolutionStrategy(resStrat)
                 .build()
 
             // TODO Maybe this would save some hassle?
             // setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
             // setOutputImageRotationEnabled(true)
-            //val opencvAnalyzer = ImageAnalysis.Builder().setResolutionSelector(resSelect).build().also {
-            val opencvAnalyzer = ImageAnalysis.Builder().build().also {
+            val opencvAnalyzer = ImageAnalysis.Builder().setResolutionSelector(resSelect).build().also {
+            //val opencvAnalyzer = ImageAnalysis.Builder().build().also {
                 it.setAnalyzer(cameraExecutor, CardAnalyzer { _, bitmap ->
 
                     val deviceRotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

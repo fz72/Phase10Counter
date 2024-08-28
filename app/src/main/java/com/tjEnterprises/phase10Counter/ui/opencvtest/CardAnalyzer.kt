@@ -12,6 +12,7 @@ import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
 import org.opencv.core.MatOfPoint2f
+import org.opencv.core.Point
 import org.opencv.core.Scalar
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
@@ -53,7 +54,18 @@ class CardAnalyzer(private val listener: OpencvListener) : ImageAnalysis.Analyze
                     if (area > 50 && aspectRatio > 0.2) {
                         val rect = Imgproc.boundingRect(cnt)
                         // Draw rectangle
-                        Imgproc.rectangle(buf, rect.tl(), rect.br(), Scalar(0.0, 255.0, 0.0), 2)
+                        Imgproc.rectangle(buf, rect.tl(), rect.br(), Scalar(0.0, 255.0, 0.0), 4)
+
+                        // Draw a corner (8x10 pixels) at the top-left corner of the detected rectangle
+                        val cornerSize = Size(64.0, 48.0) // Size of the small corner rectangle
+                        val cornerTopLeft = rect.tl() // Get the top-left corner of the detected rectangle
+
+                        // Define the bottom-right point of the small corner rectangle
+                        val cornerBottomRight = Point(cornerTopLeft.x + cornerSize.width, cornerTopLeft.y + cornerSize.height)
+
+                        // Draw the small corner rectangle
+                        Imgproc.rectangle(buf, cornerTopLeft, cornerBottomRight, Scalar(0.0, 255.0, 0.0), 4) // Use filled rectangle with color red (255, 0, 0)
+
                     }
                 }
 
