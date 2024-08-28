@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +46,7 @@ fun CameraXPreviewScreen(
     modifier: Modifier = Modifier,
     startCamera: (Context, LifecycleOwner, (Preview) -> Unit) -> Unit,
     switchCamera: () -> Unit,
+    toggleTorch: () -> Unit,
     lensFacing: Int,
     displayedBitmap: Bitmap
 ) {
@@ -81,6 +83,20 @@ fun CameraXPreviewScreen(
                 }
 
                 // TODO Add Flashlight button
+                IconButton(
+                    onClick = toggleTorch,
+                    modifier = Modifier
+                        .padding(32.dp)
+                        .size(40.dp)
+                        .background(color = MaterialTheme.colorScheme.background)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Toggle Flashlight",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+
                 // TODO Make it possible to select other than just two cameras
                 IconButton(
                     onClick = switchCamera,

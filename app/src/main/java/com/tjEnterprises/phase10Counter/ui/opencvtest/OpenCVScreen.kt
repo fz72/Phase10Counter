@@ -37,7 +37,7 @@ fun OpenCVScreen(
 
     OpenCVScreen(openDrawer = openDrawer, startCamera = { context, lifecycleOwner, preview ->
         viewModel.startCamera(context, lifecycleOwner, preview)
-    }, switchCamera = { viewModel.switchCamera() }, lensFacing = lensFacing, displayedBitmap = displayedBitmap
+    }, switchCamera = { viewModel.switchCamera() }, toggleTorch = { viewModel.toogleTorch() }, lensFacing = lensFacing, displayedBitmap = displayedBitmap
     )
 }
 
@@ -47,6 +47,7 @@ internal fun OpenCVScreen(
     openDrawer: () -> Unit,
     startCamera: (Context, LifecycleOwner, (Preview) -> Unit) -> Unit,
     switchCamera: () -> Unit,
+    toggleTorch: () -> Unit,
     lensFacing: Int,
     displayedBitmap: Bitmap
 ) {
@@ -68,6 +69,7 @@ internal fun OpenCVScreen(
                     CameraXPreviewScreen(
                         startCamera = startCamera,
                         switchCamera = switchCamera,
+                        toggleTorch = toggleTorch,
                         lensFacing = lensFacing,
                         displayedBitmap = displayedBitmap
                     )

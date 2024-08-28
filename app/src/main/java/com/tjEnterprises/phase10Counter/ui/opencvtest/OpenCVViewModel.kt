@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.view.Surface
 import android.view.WindowManager
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -43,7 +44,8 @@ class OpenCVViewModel @Inject constructor() : ViewModel() {
 
     private var preview by mutableStateOf<Preview?>(null)
     private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
-
+    private var camera by mutableStateOf<Camera?>(null)
+    private var flashState = false
 
     init {
         preview = Preview.Builder().build()
@@ -71,7 +73,8 @@ class OpenCVViewModel @Inject constructor() : ViewModel() {
             // TODO Maybe this would save some hassle?
             // setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
             // setOutputImageRotationEnabled(true)
-            val opencvAnalyzer = ImageAnalysis.Builder().setResolutionSelector(resSelect).build().also {
+            //val opencvAnalyzer = ImageAnalysis.Builder().setResolutionSelector(resSelect).build().also {
+            val opencvAnalyzer = ImageAnalysis.Builder().build().also {
                 it.setAnalyzer(cameraExecutor, CardAnalyzer { _, bitmap ->
 
                     val deviceRotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -97,7 +100,7 @@ class OpenCVViewModel @Inject constructor() : ViewModel() {
                 })
             }
 
-            cameraProvider.bindToLifecycle(lifecycleOwner, cameraxSelector, preview, opencvAnalyzer)
+            camera = cameraProvider.bindToLifecycle(lifecycleOwner, cameraxSelector, preview, opencvAnalyzer)
 
             onPreviewReady(preview!!)
         }
@@ -108,6 +111,21 @@ class OpenCVViewModel @Inject constructor() : ViewModel() {
         // TODO make it possible to switch between more than back and front cam
         _lensFacing.value =
             if (_lensFacing.value == CameraSelector.LENS_FACING_BACK) CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+    }
+
+    fun toogleTorch() {
+
+        if (camera?.cameraInfo?.hasFlashUnit() == true) {
+
+            if (!flashState) {
+                camera?.cameraControl?.enableTorch(true)
+            }
+            else {
+                camera?.cameraControl?.enableTorch(false)
+            }
+
+            flashState = !flashState
+        }
     }
 
     override fun onCleared() {
